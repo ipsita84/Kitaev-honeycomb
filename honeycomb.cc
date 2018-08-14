@@ -25,7 +25,7 @@ const double pi = acos(-1.0);
 
 // Define global scopes to use them across all functions
 double J = 1.0;
-const unsigned int axis1 = 3, axis2 = axis1;
+const unsigned int axis1 = 10, axis2 = axis1;
 const unsigned int no_of_sites = 2*axis1*axis2;
 // above assigns length along each dimension of the 2d configuration
 
@@ -38,14 +38,14 @@ int main()
     array_2d_float sitepos(boost::extents[no_of_sites][2]); 
   
 	for (unsigned int j = 0; j < no_of_sites ; ++j)
-	{	unsigned int alpha = (j+1)%(2*axis1);
-		unsigned int beta = ceil(double(j+1)/ double(2*axis1) );
-		unsigned int gamma = ceil(double(alpha)/ double(2)) ;
-		unsigned int delta = alpha % 2;
-        printf (" beta %d\n", beta);
+	{	int alpha = (j+1)%(2*axis1);
+		int beta = ceil(double(j+1)/ double(2*axis1) );
+		int gamma = ceil(double(alpha)/ double(2)) ;
+		int delta = alpha % 2;
+        //printf (" beta %d\n", beta);
 
-		sitepos[j][0] = gamma*sqrt(3.0) - beta*sqrt(3.0)*cos(pi/3.0);
-		sitepos[j][1] =-beta*sqrt(3.0) * sin(pi/3.0) + delta*1.0;
+		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(beta)*sqrt(3.0)*cos(pi/3.0);
+		sitepos[j][1] =-double(beta)*sqrt(3.0) * sin(pi/3.0) + double(delta);
         //printf (" y %f\n", sin(pi/3.0) );
        // printf ("alpha %d beta %d gamma %d\n", alpha, beta, gamma);
 
