@@ -23,33 +23,33 @@ using namespace std;
 const double pi = acos(-1.0);
 //const double pi = 3.14;
 
-// Define global scopes to use them across all functions
+// Define lattice constants
 double J = 1.0;
-const unsigned int axis1 = 10, axis2 = axis1;
-const unsigned int no_of_sites = 2*axis1*axis2;
-// above assigns length along each dimension of the 2d configuration
+const int axis1 = 10, axis2 = axis1;
+const int no_of_sites = 2*axis1*axis2;
+
 
 typedef boost::multi_array < double, 2 > array_2d_float;
+typedef boost::multi_array < int, 2 > array_2d_int;
 
 int main()
 {     	
 	ofstream fout("pos.dat");	// Opens a file for output
 
     array_2d_float sitepos(boost::extents[no_of_sites][2]); 
+    array_2d_int A(boost::extents[axis1][axis2]);//A sublattice has even numbered sites
+    array_2d_int B(boost::extents[axis1][axis2]);//B sublattice has even odd sites 
   
 	for (unsigned int j = 0; j < no_of_sites ; ++j)
 	{	int alpha = (j+1)%(2*axis1);
 		int beta = ceil(double(j+1)/ double(2*axis1) );
 		int gamma = ceil(double(alpha)/ double(2)) ;
 		int delta = alpha % 2;
-        //printf (" beta %d\n", beta);
 
 		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(beta)*sqrt(3.0)*cos(pi/3.0);
-		sitepos[j][1] =-double(beta)*sqrt(3.0) * sin(pi/3.0) + double(delta);
-        //printf (" y %f\n", sin(pi/3.0) );
-       // printf ("alpha %d beta %d gamma %d\n", alpha, beta, gamma);
+		sitepos[j][1] =-double(beta)*sqrt(3.0)*sin(pi/3.0)+ double(delta);
 
-        printf ("x %f y %f \n", sitepos[j][0], sitepos[j][1]);
+        //printf ("x %f y %f \n", sitepos[j][0], sitepos[j][1]);
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(7);
@@ -58,7 +58,16 @@ int main()
         fout << setw(20)<< sitepos[j][1] << endl;
         // writing position coordinates to file "pos.dat"
 	}
-	
+    int counter = 0;
+	for (unsigned int j = 0; j < axis2 ; ++j)
+	{	
+        for (unsigned int i = 0; i < axis1 ; ++i)        
+        {   counter = counter +1 ;
+            A[i][j] = 2*counter;
+            printf (" % d",A[i][j]);
+        }
+        printf ("\n");
+	}
 
 	fout.close();
 	
