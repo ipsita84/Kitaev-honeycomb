@@ -64,7 +64,9 @@ int main()
         for (unsigned int i = 0; i < axis1 ; ++i)        
         {   counter = counter +1 ;
             A[i][j] = 2*counter;
-            printf (" % d",A[i][j]);
+            B[i][j] = A[i][j]-1;
+            //printf (" % d",A[i][j]);
+            //printf (" % d",B[i][j]);
         }
         printf ("\n");
 	}
