@@ -21,6 +21,7 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
+//const double pi = 3.14;
 
 // Define global scopes to use them across all functions
 double J = 1.0;
@@ -35,19 +36,18 @@ int main()
 	ofstream fout("pos.dat");	// Opens a file for output
 
     array_2d_float sitepos(boost::extents[no_of_sites][2]); 
-    //sitepos ={0};
   
 	for (unsigned int j = 0; j < no_of_sites ; ++j)
 	{	unsigned int alpha = (j+1)%(2*axis1);
-		unsigned int beta = ceil((j+1) / (2*axis1) );
-		unsigned int gamma = ceil(alpha/ 2) ;
+		unsigned int beta = ceil(double(j+1)/ double(2*axis1) );
+		unsigned int gamma = ceil(double(alpha)/ double(2)) ;
 		unsigned int delta = alpha % 2;
-        //printf (" beta %d\n", beta);
+        printf (" beta %d\n", beta);
 
 		sitepos[j][0] = gamma*sqrt(3.0) - beta*sqrt(3.0)*cos(pi/3.0);
 		sitepos[j][1] =-beta*sqrt(3.0) * sin(pi/3.0) + delta*1.0;
         //printf (" y %f\n", sin(pi/3.0) );
-        printf ("alpha %d beta %d gamma %d\n", alpha, beta, gamma);
+       // printf ("alpha %d beta %d gamma %d\n", alpha, beta, gamma);
 
         printf ("x %f y %f \n", sitepos[j][0], sitepos[j][1]);
 
