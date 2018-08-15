@@ -39,9 +39,9 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
        array_2d_float J3,std::array <double, 2> h);
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1;
+const unsigned int N_mc = 1e5;
 
-const double beta=1;
+const double beta=0.1;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +233,7 @@ int main(int argc, char const * argv[])
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(2);
-        fout << setw(6) << h[0];
+        fout << setw(6) << theta;
         fout.precision(7);
         fout << setw(15)
              << en_sum / N_mc << setw(15)
