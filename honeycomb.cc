@@ -38,6 +38,14 @@ double random_real(int a, int b);
 double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
        array_2d_float J3,std::array <double, 2> h);
 
+//No.of Monte Carlo updates we want
+const unsigned int N_mc = 1e5;
+
+const double beta=1;
+
+
+////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -88,7 +96,7 @@ int main(int argc, char const * argv[])
     array_2d_float J1(boost::extents[3][3]);
     array_2d_float J2(boost::extents[3][3]);
     array_2d_float J3(boost::extents[3][3]);
-    double mx=0, my=0, mz=0;
+    double mplanar=0, mperp=0;
 
     //Read the random signed bonds for a particular stored realization
     ifstream gin("J1.dat");
@@ -99,8 +107,121 @@ int main(int argc, char const * argv[])
     double energy(0);
     double en_sum;
 
-    energy = energy_tot(sitespin, J1,J2,J3, h);
-    printf("%f\n",energy);
+     for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
+    {
+        double theta = 0 + thetasteps * pi/100 ;
+        h[0] = 30.0*cos(theta);
+        h[1] = 30.0*sin(theta);
+        energy = energy_tot(sitespin, J1,J2,J3, h);
+        en_sum =0;
+        std::array <double, N_mc> energy_array =  {0};
+        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
+        unsigned int heating = 1e5;
+
+        for (unsigned int i = 1; i <=heating + N_mc; ++i)
+        {
+            for (unsigned int j = 1; j <= no_of_sites; ++j)
+            {
+                //Now choose a random spin site with site no.=label
+                
+                int label = roll_coin(0, no_of_sites-1);
+
+  
+                double s0 = sitespin[0][label];
+                double s1 = sitespin[1][label];
+                double s2 = sitespin[2][label];
+                double energy_old =energy ;
+  
+                double r0 = 0.5*random_real(-1, 1)/beta;
+                double r1 = 0.5*random_real(-1, 1)/beta;
+                double r2 = 0.5*random_real(-1, 1)/beta;
+                double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
+                //printf ("tot %f \n",tot);
+
+                sitespin[0][label] = (s0+r0)/sqrt(tot);
+                sitespin[1][label] = (s1+r1)/sqrt(tot);
+                sitespin[2][label]= (s2+r2)/sqrt(tot);
+
+               double checksum= pow(sitespin[0][label],2)
+                               +pow(sitespin[1][label],2)
+                               +pow(sitespin[2][label],2);
+               if (checksum > 1.00001) {printf ("%f error \n", checksum);}
+
+                double energy_new = energy_tot(sitespin,J1,J2,J3,h);
+                double energy_diff = energy_new - energy_old;
+                double acc_ratio = exp(-1.0 * energy_diff* beta/200);
+                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
+                //Spin flipped if r <= acceptance ratio
+                if (r <= acc_ratio)
+                {
+                    energy = energy_new ;
+    
+                }
+                if (r > acc_ratio)
+                {
+                    sitespin[0][label] = s0;
+                    sitespin[1][label] = s1;
+                    sitespin[2][label] = s2;
+                    energy = energy_old ;
+
+                }
+ 
+            }
+
+            if (i >  heating )
+            {
+                en_sum += energy;
+                energy_array[i- heating  -1] = energy;
+ 
+                for (unsigned int l = 0; l < no_of_sites; ++l)
+                {
+                  mplanar += sitespin[0][l] ;
+                  m_planar_array[i- heating  -1] += sitespin[0][l] ;
+ 
+                  mperp += sitespin[1][l] ;
+                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                }
+
+            }
+        }
+
+
+        double sigma_en = 0, sigma_mplanar = 0, sigma_mperp = 0;
+        for (unsigned i=0; i< N_mc; i++)
+        {
+            sigma_en += (energy_array[i] - en_sum/ N_mc) 
+                        * (energy_array[i] - en_sum/ N_mc);
+            sigma_mplanar += (m_planar_array[i] - mplanar/ N_mc) 
+                               * (m_planar_array[i] - mplanar/ N_mc) ;
+
+            sigma_mperp += (m_perp_array[i] - mperp/ N_mc)
+                           * (m_perp_array[i] - mperp/ N_mc) ;
+        }
+
+        fout.setf( ios_base::fixed, ios_base::floatfield );
+        fout.precision(2);
+        fout << setw(6) << h[0];
+        fout.precision(7);
+        fout << setw(15)
+             << en_sum / N_mc << setw(15)
+             << sqrt(sigma_en) / N_mc << endl;
+        // printing energy to file "Energy.dat"
+
+        f1out.setf( ios_base::fixed, ios_base::floatfield );
+        f1out.precision(2);
+        f1out << setw(6) << theta;
+        f1out.precision(7);
+        f1out << setw(15)
+              <<(mplanar*sin(theta)-mperp*cos(theta))/(no_of_sites*N_mc)
+              << setw(15) << mplanar/(no_of_sites*N_mc)
+              << setw(15) << sqrt(sigma_mplanar)/(no_of_sites*N_mc)
+              << setw(15) << mperp/(no_of_sites*N_mc)
+              << setw(15) << sqrt(sigma_mperp)/(no_of_sites*N_mc)  << endl;
+// printing magnetization to file "mag.dat"
+//  (hz mx -  hz my)/h
+        mplanar=0;
+        mperp=0;
+    }
  
 	fout.close();
 	f1out.close();
@@ -188,6 +309,10 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
                  energy += J2[comp1][comp2]*sitespin[comp1][rotateleftA[i][j]-1]
                                            *sitespin[comp2][B[i][j]-1];
                  energy += J2[comp2][comp1]*sitespin[comp2][rotateleftA[i][j]-1]
+                                           *sitespin[comp1][B[i][j]-1];
+                 energy += J3[comp1][comp2]*sitespin[comp1][cornerA[i][j]-1]
+                                           *sitespin[comp2][B[i][j]-1];
+                 energy += J3[comp2][comp1]*sitespin[comp2][cornerA[i][j]-1]
                                            *sitespin[comp1][B[i][j]-1];
                  
                 }
