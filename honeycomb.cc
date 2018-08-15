@@ -24,7 +24,7 @@ using namespace std;
 const double pi = acos(-1.0);
 
 // Define lattice constants
-const int axis1 = 5, axis2 = axis1;
+const int axis1 = 10, axis2 = axis1;
 const int no_of_sites = 2*axis1*axis2;
 
 
@@ -39,7 +39,7 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
        array_2d_float J3,std::array <double, 2> h);
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int N_mc = 1;
 
 const double beta=1;
 
@@ -99,9 +99,42 @@ int main(int argc, char const * argv[])
     double mplanar=0, mperp=0;
 
     //Read the random signed bonds for a particular stored realization
+
+    ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
+    ofstream fout("Energy.dat", std::fstream::app);
+
     ifstream gin("J1.dat");
-    ofstream f1out("mag1_hx.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy1_hx.dat", std::fstream::app);
+    for (unsigned int comp1=0; comp1<3; ++comp1)
+    {
+        for (unsigned int comp2=0; comp2<3; ++comp2)
+        {
+
+            gin>>J1[comp1][comp2];
+
+
+        }
+    }
+    for (unsigned int comp1=0; comp1<3; ++comp1)
+    {
+        for (unsigned int comp2=0; comp2<3; ++comp2)
+        {
+
+            gin>>J2[comp1][comp2];
+
+
+        }
+    }
+    for (unsigned int comp1=0; comp1<3; ++comp1)
+    {
+        for (unsigned int comp2=0; comp2<3; ++comp2)
+        {
+
+            gin>>J3[comp1][comp2];
+
+
+        }
+    }
+    gin.close();
 
 
     double energy(0);
