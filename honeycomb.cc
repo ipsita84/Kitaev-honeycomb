@@ -24,7 +24,7 @@ using namespace std;
 const double pi = acos(-1.0);
 
 // Define lattice constants
-const int axis1 = 4, axis2 = axis1;
+const int axis1 = 5, axis2 = axis1;
 const int no_of_sites = 2*axis1*axis2;
 
 
@@ -133,8 +133,8 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
 	{	
         for (unsigned int j = 0; j < axis2 ; ++j)        
         {   counter = counter +1 ;
-            A[i][j] = 2*counter;
-            B[i][j] = A[i][j]-1;
+            B[i][j] = 2*counter;
+            A[i][j] = B[i][j]-1;
             //printf (" % d",A[i][j]);
             //printf (" % d",B[i][j]);
         }
@@ -157,6 +157,19 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
         {   rotateleftA[axis1-1][j] = A[0][j];
             //printf (" % d",rotateleftA[axis1-1][j]);
         }
+
+    array_2d_int cornerA(boost::extents[axis1][axis2]);
+	for (unsigned int i = 0; i < axis1 ; ++i)
+	{	
+        for (unsigned int j = 0; j < axis2-1 ; ++j)        
+        {   cornerA[i][j] = rotateleftA[i][j+1];
+            //printf (" % d",cornerA[i][j]);
+        }
+        cornerA[i][axis2-1]=rotateleftA[i][0];
+        //printf (" % d",cornerA[i][axis2-1]);
+        //printf ("\n");
+    }
+    
 
 
    for (unsigned comp1  = 0; comp1 < 3; ++comp1)
