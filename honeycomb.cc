@@ -13,6 +13,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <math.h>
 #include <array>
+#include <algorithm>
 
 
 // gen is a variable name
@@ -23,7 +24,7 @@ using namespace std;
 const double pi = acos(-1.0);
 
 // Define lattice constants
-const int axis1 = 10, axis2 = axis1;
+const int axis1 = 4, axis2 = axis1;
 const int no_of_sites = 2*axis1*axis2;
 
 
@@ -34,9 +35,9 @@ typedef boost::multi_array < int, 2 > array_2d_int;
 //Function templates
 int roll_coin(int a, int b);
 double random_real(int a, int b);
-double energy_tot(array_2d_float sitespin, array_2d_float J, std::array <double, 2> h);
-//double nn_energy(array_2d_float sitespin,  array_2d J, std::array <double, 2> h,
-      // unsigned int row, unsigned int col);
+double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
+       array_2d_float J3,std::array <double, 2> h);
+
 
 
 
@@ -84,7 +85,9 @@ int main(int argc, char const * argv[])
 
         }
 
-    array_2d_float J(boost::extents[3][3]);
+    array_2d_float J1(boost::extents[3][3]);
+    array_2d_float J2(boost::extents[3][3]);
+    array_2d_float J3(boost::extents[3][3]);
     double mx=0, my=0, mz=0;
 
     //Read the random signed bonds for a particular stored realization
@@ -95,6 +98,12 @@ int main(int argc, char const * argv[])
 
     double energy(0);
     double en_sum;
+
+    energy = energy_tot(sitespin, J1,J2,J3, h);
+    printf("%f\n",energy);
+ 
+	fout.close();
+	f1out.close();
 	
 	return 0;
 }
@@ -102,10 +111,10 @@ int main(int argc, char const * argv[])
 
 
 //function to calculate total energy
-//for a given spin configuration
-//with open boundary conditions
-
-double energy_tot(array_2d_float sitespin, array_2d_float J, std::array <double, 2> h)
+//for a given spin configuration with pbc
+double energy_tot(array_2d_float sitespin, array_2d_float J1, 
+                  array_2d_float J2,array_2d_float J3,
+                  std::array <double, 2> h)
 {
     double energy = 0;
 
@@ -120,9 +129,9 @@ double energy_tot(array_2d_float sitespin, array_2d_float J, std::array <double,
 
 
     int counter = 0;
-	for (unsigned int j = 0; j < axis2 ; ++j)
+	for (unsigned int i = 0; i < axis1 ; ++i)
 	{	
-        for (unsigned int i = 0; i < axis1 ; ++i)        
+        for (unsigned int j = 0; j < axis2 ; ++j)        
         {   counter = counter +1 ;
             A[i][j] = 2*counter;
             B[i][j] = A[i][j]-1;
@@ -132,26 +141,46 @@ double energy_tot(array_2d_float sitespin, array_2d_float J, std::array <double,
         //printf ("\n");
     }
 
-    for (unsigned comp1  = 0; comp1 < 3; ++comp1)
+
+
+    // simple rotation to the left
+    array_2d_int rotateleftA(boost::extents[axis1][axis2]);
+	for (unsigned int i = 0; i < axis1-1 ; ++i)
+	{	
+        for (unsigned int j = 0; j < axis2 ; ++j)        
+        {   rotateleftA[i][j] = A[i+1][j];
+            //printf (" % d",rotateleftA[i][j]);
+        }
+        //printf ("\n");
+    }
+    for (unsigned int j = 0; j < axis2 ; ++j)        
+        {   rotateleftA[axis1-1][j] = A[0][j];
+            //printf (" % d",rotateleftA[axis1-1][j]);
+        }
+
+
+   for (unsigned comp1  = 0; comp1 < 3; ++comp1)
     {
-        for (unsigned comp2  = comp1; comp2 < 3; ++comp2)
+        for (unsigned comp2  = 0; comp2 < 3; ++comp2)
         {
 
             for (unsigned int i = 0; i < axis1 ; ++i)
             {
                 for (unsigned int j = 0; j < axis2 ; ++j)
                 {
-                  energy += J[comp1][comp2]*sitespin[comp1][A[i][j]]
-                                           *sitespin[comp2][B[i][j]];
-                  energy += J[comp2][comp1]*sitespin[comp2][A[i][j]]
-                                           *sitespin[comp1][B[i][j]];
+                 energy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                                           *sitespin[comp2][B[i][j]-1];
+                 energy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                                           *sitespin[comp1][B[i][j]-1];
+                 energy += J2[comp1][comp2]*sitespin[comp1][rotateleftA[i][j]-1]
+                                           *sitespin[comp2][B[i][j]-1];
+                 energy += J2[comp2][comp1]*sitespin[comp2][rotateleftA[i][j]-1]
+                                           *sitespin[comp1][B[i][j]-1];
+                 
                 }
             }
         }
     }
-
-
-
     return energy;
 }
 
