@@ -328,7 +328,7 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
 
    for (unsigned comp1  = 0; comp1 < 3; ++comp1)
     {
-        for (unsigned comp2  = 0; comp2 < 3; ++comp2)
+        for (unsigned comp2  = comp1; comp2 < 3; ++comp2)
         {
 
             for (unsigned int i = 0; i < axis1 ; ++i)
