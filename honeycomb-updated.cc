@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 honeycomb.cc -o testo
+//g++ -std=c++11 -Wall -O3 honeycomb-updated.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 
@@ -13,7 +13,7 @@
 #include <boost/random/uniform_real_distribution.hpp>
 #include <math.h>
 #include <array>
-
+#include <algorithm>
 
 boost::random::mt19937 gen;
 using namespace std;
@@ -37,7 +37,7 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
        array_2d_float J3,std::array <double, 2> h, array_2d_int A, 
        array_2d_int B, array_2d_int rotateleftA, array_2d_int cornerA);
 
-double nnenergy(array_2d_float sitespin, array_2d_float J1, 
+double nn_energy(array_2d_float sitespin, array_2d_float J1, 
                   array_2d_float J2,array_2d_float J3,
                   std::array <double, 2> h, array_2d_int A, array_2d_int B, 
 array_2d_int rotateleftA, array_2d_int cornerA,array_2d_int rotaterightB, 
@@ -245,14 +245,14 @@ int main(int argc, char const * argv[])
                 int sublat =roll_coin(0,1);
                   
                 int label;
-                if (sublat == 0) label = A[i][j];
-                else label == B[i][j];
+                if (sublat == 0) label = A[row][col]-1;
+                else label = B[row][col]-1;
 
                 double s0 = sitespin[0][label];
                 double s1 = sitespin[1][label];
                 double s2 = sitespin[2][label];
                 double energy_old =energy ;
-                double energy_minus_rnd_site =energy_old -nnenergy(sitespin,J1,
+                double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
   
                 double r0 = 0.5*random_real(-1, 1)/beta;
@@ -426,7 +426,7 @@ double random_real(int a, int b)
 }
 
 
-double nnenergy(array_2d_float sitespin, array_2d_float J1, 
+double nn_energy(array_2d_float sitespin, array_2d_float J1, 
                   array_2d_float J2,array_2d_float J3,
                   std::array <double, 2> h, array_2d_int A, array_2d_int B, 
 array_2d_int rotateleftA, array_2d_int cornerA,array_2d_int rotaterightB, 
@@ -435,24 +435,24 @@ array_2d_int cornerB, int row, int col, int sublat)
     double nenergy = 0;
     int i=row; int j=col;  
  
-    if (int sublat = 0)         
-    { nenergy += -h[0]*sitespin[0][A[i,j]]-h[1]*sitespin[1][A[i,j]];
+    if (sublat == 0)         
+    { nenergy += -h[0]*sitespin[0][A[i][j]-1]-h[1]*sitespin[1][A[i][j]-1];
     for (unsigned comp1  = 0; comp1 < 3; ++comp1)
         {
             for (unsigned comp2  = comp1; comp2 < 3; ++comp2)
              {
 
-                 energy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
                                            *sitespin[comp2][B[i][j]-1];
-                 energy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
                                            *sitespin[comp1][B[i][j]-1];
-                 energy += J2[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J2[comp1][comp2]*sitespin[comp1][A[i][j]-1]
                                            *sitespin[comp2][rotaterightB[i][j]-1];
-                 energy += J2[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J2[comp2][comp1]*sitespin[comp2][A[i][j]-1]
                                            *sitespin[comp1][rotaterightB[i][j]-1];
-                 energy += J3[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J3[comp1][comp2]*sitespin[comp1][A[i][j]-1]
                                            *sitespin[comp2][cornerB[i][j]-1];
-                 energy += J3[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J3[comp2][comp1]*sitespin[comp2][A[i][j]-1]
                                            *sitespin[comp1][cornerB[i][j]-1];
                  
               }
@@ -461,7 +461,7 @@ array_2d_int cornerB, int row, int col, int sublat)
 
 
     else 
-    {nenergy += -h[0]*sitespin[0][B[i,j]]-h[1]*sitespin[1][B[i,j]];
+    {nenergy += -h[0]*sitespin[0][B[i][j]-1]-h[1]*sitespin[1][B[i][j]-1];
             
 
     for (unsigned comp1  = 0; comp1 < 3; ++comp1)
@@ -469,17 +469,17 @@ array_2d_int cornerB, int row, int col, int sublat)
             for (unsigned comp2  = comp1; comp2 < 3; ++comp2)
              {
 
-                 energy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
                                            *sitespin[comp2][B[i][j]-1];
-                 energy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
                                            *sitespin[comp1][B[i][j]-1];
-                 energy += J2[comp1][comp2]*sitespin[comp1][rotateleftA[i][j]-1]
+                nenergy += J2[comp1][comp2]*sitespin[comp1][rotateleftA[i][j]-1]
                                            *sitespin[comp2][B[i][j]-1];
-                 energy += J2[comp2][comp1]*sitespin[comp2][rotateleftA[i][j]-1]
+                nenergy += J2[comp2][comp1]*sitespin[comp2][rotateleftA[i][j]-1]
                                            *sitespin[comp1][B[i][j]-1];
-                 energy += J3[comp1][comp2]*sitespin[comp1][cornerA[i][j]-1]
+                nenergy += J3[comp1][comp2]*sitespin[comp1][cornerA[i][j]-1]
                                            *sitespin[comp2][B[i][j]-1];
-                 energy += J3[comp2][comp1]*sitespin[comp2][cornerA[i][j]-1]
+                nenergy += J3[comp2][comp1]*sitespin[comp2][cornerA[i][j]-1]
                                            *sitespin[comp1][B[i][j]-1];
                  
               }
