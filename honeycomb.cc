@@ -43,6 +43,7 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
 const unsigned int N_mc = 1e5;
 
 const double beta=0.1;
+//const double K= -60, G = 30 ;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +160,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J1[comp1][comp2];
-
+            printf (" % f\n",J1[comp1][comp2]);
 
         }
     }
@@ -169,7 +170,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J2[comp1][comp2];
-
+            printf (" % f\n",J2[comp1][comp2]);
 
         }
     }
@@ -179,7 +180,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J3[comp1][comp2];
-
+            printf (" % f\n",J2[comp1][comp2]);
 
         }
     }

@@ -1,30 +1,30 @@
--20
--200
+-60
+0 
 0
--200
--20
+0 
+0 
+30
+0 
+30
 0
+0 
+0 
+30
+0 
+-60
 0
+30
+0 
 0
--20
--20
--200
+0 
+30
 0
--200
--20
+30
+0 
 0
-0
-0
--20
--20
--200
-0
--200
--20
-0
-0
-0
--20
+0 
+0 
+-60
 
 
 
@@ -32,29 +32,28 @@
 
 
 
+xx bond:
 
+J1 = 
+K 0 0
+0 0 G
+0 G 0
 
-double j_isotropic =- 20;
-	double sym1 = -200 ;
-	double sym2 = -0 ;
-	double sym3 = -0 ;
-	double antisym1 = -0 ;
-	double antisym2 = -0 ;
-	double antisym3 = -0 ;
+yy bond:
 
-	ofstream gout("J1.dat");	// Opens a file for output
+J2= 
+0 0 G
+0 K 0
+G 0 0
 
+zz bond:
 
-	J[0][0] = j_isotropic ;
-    J[1][1] = j_isotropic ;
-    J[2][2] = j_isotropic ;
+J3 = 
+0 G 0
+G 0 0
+0 0 K
 
-
-  	J[0][1] = sym1 +antisym1 ;
-    J[1][0] = sym1 - antisym1 ;
-    
-  	J[0][2] = sym2 +antisym2 ;   
-    J[2][0] = sym2 - antisym2 ;
-   
-  	J[2][1] = sym3 + antisym3 ;
-    J[1][2] =  sym3 - antisym3;
+These three matrices are related to each other by a cyclic permutation. One serious study expects the values of K and G = \Gamma to be K = - 5 meV and \Gamma = +2.5 meV (see http://iopscience.iop.org/article/10.1088/1361-648X/aa8cf5/pdf). (1 meV ) e = k_B T
+So the temperature corresponding to 1 meV is:
+T = 0.001 e/k_B = 11.6
+So K = - 5 meV = -58 K ~ -60 K and \Gamma = 2.5 meV ~ 30 K. 
