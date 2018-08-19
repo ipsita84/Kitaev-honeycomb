@@ -184,9 +184,11 @@ int main(int argc, char const * argv[])
     //Read the random signed bonds for a particular stored realization
 
     ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
-    ofstream fout("Energy.dat", std::fstream::app);
+    ofstream fout("energy.dat", std::fstream::app);
+    f1out << "theta \t tau \t mag_planar (x-dirn) \t error"
+     <<"\t mag_perp (z-dirn) \t error"<<endl;
 
-    ifstream gin("J1.dat");
+    ifstream gin("J.dat");
     for (unsigned int comp1=0; comp1<3; ++comp1)
     {
         for (unsigned int comp2=0; comp2<3; ++comp2)
@@ -264,7 +266,7 @@ int main(int argc, char const * argv[])
                 sitespin[0][label] = (s0+r0)/sqrt(tot);
                 sitespin[1][label] = (s1+r1)/sqrt(tot);
                 sitespin[2][label]= (s2+r2)/sqrt(tot);
-// algp from pg-24 of
+// algo from pg-24 of
 // https://journals-aps-org.proxy.library.cornell.edu/prb/pdf/10.1103/PhysRevB.24.1391
 
                double checksum= pow(sitespin[0][label],2)
@@ -307,7 +309,7 @@ int main(int argc, char const * argv[])
  
                   mperp += sitespin[1][l] ;
                   m_perp_array[i- heating  -1] += sitespin[1][l];
-                }
+                }//plane is the xz-plane; perp is y
 
             }
         }
@@ -326,12 +328,10 @@ int main(int argc, char const * argv[])
         }
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
-        fout.precision(2);
-        fout << setw(6) << theta;
-        fout.precision(7);
-        fout << setw(15)
-             << en_sum / (no_of_sites*N_mc) << setw(15)
-             << sqrt(sigma_en) / (no_of_sites*N_mc) << endl;
+        fout.precision(2);fout << setw(6) << theta;
+        fout.precision(7);fout << setw(25)<< en_sum / (no_of_sites*N_mc) 
+                          << setw(15)<< sqrt(sigma_en) / (no_of_sites*N_mc)
+                          << endl;
         // printing energy to file "Energy.dat"
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
