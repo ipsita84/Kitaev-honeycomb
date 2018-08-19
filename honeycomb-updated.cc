@@ -330,8 +330,8 @@ int main(int argc, char const * argv[])
         fout << setw(6) << theta;
         fout.precision(7);
         fout << setw(15)
-             << en_sum / N_mc << setw(15)
-             << sqrt(sigma_en) / N_mc << endl;
+             << en_sum / (no_of_sites*N_mc) << setw(15)
+             << sqrt(sigma_en) / (no_of_sites*N_mc) << endl;
         // printing energy to file "Energy.dat"
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
@@ -433,26 +433,27 @@ array_2d_int rotateleftA, array_2d_int cornerA,array_2d_int rotaterightB,
 array_2d_int cornerB, int row, int col, int sublat)
 {
     double nenergy = 0;
-    int i=row; int j=col;  
+    int i=row; int j=col;  int label;
  
     if (sublat == 0)         
-    { nenergy += -h[0]*sitespin[0][A[i][j]-1]-h[1]*sitespin[1][A[i][j]-1];
+    { label=A[i][j]-1;
+    nenergy += -h[0]*sitespin[0][label]-h[1]*sitespin[1][label];
     for (unsigned comp1  = 0; comp1 < 3; ++comp1)
         {
             for (unsigned comp2  = comp1; comp2 < 3; ++comp2)
              {
 
-                nenergy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J1[comp1][comp2]*sitespin[comp1][label]
                                            *sitespin[comp2][B[i][j]-1];
-                nenergy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J1[comp2][comp1]*sitespin[comp2][label]
                                            *sitespin[comp1][B[i][j]-1];
-                nenergy += J2[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J2[comp1][comp2]*sitespin[comp1][label]
                                            *sitespin[comp2][rotaterightB[i][j]-1];
-                nenergy += J2[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J2[comp2][comp1]*sitespin[comp2][label]
                                            *sitespin[comp1][rotaterightB[i][j]-1];
-                nenergy += J3[comp1][comp2]*sitespin[comp1][A[i][j]-1]
+                nenergy += J3[comp1][comp2]*sitespin[comp1][label]
                                            *sitespin[comp2][cornerB[i][j]-1];
-                nenergy += J3[comp2][comp1]*sitespin[comp2][A[i][j]-1]
+                nenergy += J3[comp2][comp1]*sitespin[comp2][label]
                                            *sitespin[comp1][cornerB[i][j]-1];
                  
               }
@@ -461,7 +462,8 @@ array_2d_int cornerB, int row, int col, int sublat)
 
 
     else 
-    {nenergy += -h[0]*sitespin[0][B[i][j]-1]-h[1]*sitespin[1][B[i][j]-1];
+    { label=B[i][j]-1;
+    nenergy += -h[0]*sitespin[0][label]-h[1]*sitespin[1][label];
             
 
     for (unsigned comp1  = 0; comp1 < 3; ++comp1)
@@ -470,17 +472,17 @@ array_2d_int cornerB, int row, int col, int sublat)
              {
 
                 nenergy += J1[comp1][comp2]*sitespin[comp1][A[i][j]-1]
-                                           *sitespin[comp2][B[i][j]-1];
+                                           *sitespin[comp2][label];
                 nenergy += J1[comp2][comp1]*sitespin[comp2][A[i][j]-1]
-                                           *sitespin[comp1][B[i][j]-1];
+                                           *sitespin[comp1][label];
                 nenergy += J2[comp1][comp2]*sitespin[comp1][rotateleftA[i][j]-1]
-                                           *sitespin[comp2][B[i][j]-1];
+                                           *sitespin[comp2][label];
                 nenergy += J2[comp2][comp1]*sitespin[comp2][rotateleftA[i][j]-1]
-                                           *sitespin[comp1][B[i][j]-1];
+                                           *sitespin[comp1][label];
                 nenergy += J3[comp1][comp2]*sitespin[comp1][cornerA[i][j]-1]
-                                           *sitespin[comp2][B[i][j]-1];
+                                           *sitespin[comp2][label];
                 nenergy += J3[comp2][comp1]*sitespin[comp2][cornerA[i][j]-1]
-                                           *sitespin[comp1][B[i][j]-1];
+                                           *sitespin[comp1][label];
                  
               }
         }
