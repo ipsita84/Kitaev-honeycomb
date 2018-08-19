@@ -36,7 +36,8 @@ typedef boost::multi_array < int, 2 > array_2d_int;
 int roll_coin(int a, int b);
 double random_real(int a, int b);
 double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
-       array_2d_float J3,std::array <double, 2> h);
+       array_2d_float J3,std::array <double, 2> h, array_2d_int A, 
+       array_2d_int B, array_2d_int rotateleftA, array_2d_int cornerA);
 
 //No.of Monte Carlo updates we want
 const unsigned int N_mc = 1e5;
@@ -93,6 +94,54 @@ int main(int argc, char const * argv[])
 
         }
 
+
+    array_2d_int A(boost::extents[axis1][axis2]);//A sublattice has even numbered sites
+    array_2d_int B(boost::extents[axis1][axis2]);//B sublattice has even odd sites 
+
+
+    int counter = 0;
+	for (unsigned int i = 0; i < axis1 ; ++i)
+	{	
+        for (unsigned int j = 0; j < axis2 ; ++j)        
+        {   counter = counter +1 ;
+            B[i][j] = 2*counter;
+            A[i][j] = B[i][j]-1;
+            //printf (" % d",A[i][j]);
+            //printf (" % d",B[i][j]);
+        }
+        //printf ("\n");
+    }
+
+
+
+    // simple rotation to the left
+    array_2d_int rotateleftA(boost::extents[axis1][axis2]);
+	for (unsigned int i = 0; i < axis1-1 ; ++i)
+	{	
+        for (unsigned int j = 0; j < axis2 ; ++j)        
+        {   rotateleftA[i][j] = A[i+1][j];
+            //printf (" % d",rotateleftA[i][j]);
+        }
+        //printf ("\n");
+    }
+    for (unsigned int j = 0; j < axis2 ; ++j)        
+        {   rotateleftA[axis1-1][j] = A[0][j];
+            //printf (" % d",rotateleftA[axis1-1][j]);
+        }
+
+    array_2d_int cornerA(boost::extents[axis1][axis2]);
+	for (unsigned int i = 0; i < axis1 ; ++i)
+	{	
+        for (unsigned int j = 0; j < axis2-1 ; ++j)        
+        {   cornerA[i][j] = rotateleftA[i][j+1];
+            //printf (" % d",cornerA[i][j]);
+        }
+        cornerA[i][axis2-1]=rotateleftA[i][0];
+        //printf (" % d",cornerA[i][axis2-1]);
+        //printf ("\n");
+    }
+    
+
     array_2d_float J1(boost::extents[3][3]);
     array_2d_float J2(boost::extents[3][3]);
     array_2d_float J3(boost::extents[3][3]);
@@ -145,7 +194,7 @@ int main(int argc, char const * argv[])
         double theta = 0 + thetasteps * pi/100 ;
         h[0] = 30.0*cos(theta);
         h[1] = 30.0*sin(theta);
-        energy = energy_tot(sitespin, J1,J2,J3, h);
+        energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
         en_sum =0;
         std::array <double, N_mc> energy_array =  {0};
         std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
@@ -182,7 +231,8 @@ int main(int argc, char const * argv[])
                                +pow(sitespin[2][label],2);
                if (checksum > 1.00001) {printf ("%f error \n", checksum);}
 
-                double energy_new = energy_tot(sitespin,J1,J2,J3,h);
+                double energy_new = energy_tot(sitespin,J1,J2,J3,h,A,B,
+                                                rotateleftA,cornerA);
                 double energy_diff = energy_new - energy_old;
                 double acc_ratio = exp(-1.0 * energy_diff* beta/200);
                 double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
@@ -268,9 +318,9 @@ int main(int argc, char const * argv[])
 
 //function to calculate total energy
 //for a given spin configuration with pbc
-double energy_tot(array_2d_float sitespin, array_2d_float J1, 
-                  array_2d_float J2,array_2d_float J3,
-                  std::array <double, 2> h)
+double energy_tot(array_2d_float sitespin, array_2d_float J1, array_2d_float J2,
+array_2d_float J3, std::array <double, 2> h, array_2d_int A, array_2d_int B, 
+array_2d_int rotateleftA, array_2d_int cornerA)
 {
     double energy = 0;
 
@@ -280,52 +330,6 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
             
         }
 
-    array_2d_int A(boost::extents[axis1][axis2]);//A sublattice has even numbered sites
-    array_2d_int B(boost::extents[axis1][axis2]);//B sublattice has even odd sites 
-
-
-    int counter = 0;
-	for (unsigned int i = 0; i < axis1 ; ++i)
-	{	
-        for (unsigned int j = 0; j < axis2 ; ++j)        
-        {   counter = counter +1 ;
-            B[i][j] = 2*counter;
-            A[i][j] = B[i][j]-1;
-            //printf (" % d",A[i][j]);
-            //printf (" % d",B[i][j]);
-        }
-        //printf ("\n");
-    }
-
-
-
-    // simple rotation to the left
-    array_2d_int rotateleftA(boost::extents[axis1][axis2]);
-	for (unsigned int i = 0; i < axis1-1 ; ++i)
-	{	
-        for (unsigned int j = 0; j < axis2 ; ++j)        
-        {   rotateleftA[i][j] = A[i+1][j];
-            //printf (" % d",rotateleftA[i][j]);
-        }
-        //printf ("\n");
-    }
-    for (unsigned int j = 0; j < axis2 ; ++j)        
-        {   rotateleftA[axis1-1][j] = A[0][j];
-            //printf (" % d",rotateleftA[axis1-1][j]);
-        }
-
-    array_2d_int cornerA(boost::extents[axis1][axis2]);
-	for (unsigned int i = 0; i < axis1 ; ++i)
-	{	
-        for (unsigned int j = 0; j < axis2-1 ; ++j)        
-        {   cornerA[i][j] = rotateleftA[i][j+1];
-            //printf (" % d",cornerA[i][j]);
-        }
-        cornerA[i][axis2-1]=rotateleftA[i][0];
-        //printf (" % d",cornerA[i][axis2-1]);
-        //printf ("\n");
-    }
-    
 
 
    for (unsigned comp1  = 0; comp1 < 3; ++comp1)
@@ -359,7 +363,7 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,
 
 
 
-
+////////////////////////////////////////////////////////////////////
 //function to generate random integer
 // between 2 integers a & b, including a & b
 int roll_coin(int a, int b)
