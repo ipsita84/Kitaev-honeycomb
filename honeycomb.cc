@@ -174,6 +174,8 @@ int main(int argc, char const * argv[])
                 sitespin[0][label] = (s0+r0)/sqrt(tot);
                 sitespin[1][label] = (s1+r1)/sqrt(tot);
                 sitespin[2][label]= (s2+r2)/sqrt(tot);
+// algp from pg-24 of
+// https://journals-aps-org.proxy.library.cornell.edu/prb/pdf/10.1103/PhysRevB.24.1391
 
                double checksum= pow(sitespin[0][label],2)
                                +pow(sitespin[1][label],2)
