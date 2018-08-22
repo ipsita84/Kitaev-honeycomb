@@ -45,7 +45,7 @@ array_2d_int cornerB, int row, int col, int sublat);
 
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int N_mc = 1e7;
 
 const double beta=0.1;
 //const double K= -60, G = 30 ;
@@ -232,8 +232,8 @@ int main(int argc, char const * argv[])
         h[1] = 30.0*sin(theta);
         energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
         en_sum =0;
-        std::array <double, N_mc> energy_array =  {0};
-        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
+        std::array <double, N_mc/100> energy_array =  {0};
+        std::array <double, N_mc/100> m_planar_array={0}, m_perp_array ={0};
         unsigned int heating = 1e5;
 
         for (unsigned int i = 1; i <=heating + N_mc; ++i)
@@ -300,15 +300,15 @@ int main(int argc, char const * argv[])
             if (i >  heating )
             {
                 en_sum += energy;
-                energy_array[i- heating  -1] = energy;
+                energy_array[(i- heating  -1)%100] = energy;
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
                   mplanar += sitespin[0][l] ;
-                  m_planar_array[i- heating  -1] += sitespin[0][l] ;
+                  m_planar_array[(i- heating  -1)%100] += sitespin[0][l] ;
  
                   mperp += sitespin[1][l] ;
-                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                  m_perp_array[(i- heating  -1)%100] += sitespin[1][l];
                 }//plane is the xz-plane; perp is y
 
             }
@@ -316,21 +316,21 @@ int main(int argc, char const * argv[])
 
 
         double sigma_en = 0, sigma_mplanar = 0, sigma_mperp = 0;
-        for (unsigned i=0; i< N_mc; i++)
+        for (unsigned i=0; i< N_mc/100; i++)
         {
-            sigma_en += (energy_array[i] - en_sum/ N_mc) 
-                        * (energy_array[i] - en_sum/ N_mc);
-            sigma_mplanar += (m_planar_array[i] - mplanar/ N_mc) 
-                               * (m_planar_array[i] - mplanar/ N_mc) ;
+            sigma_en += (energy_array[i] - 100*en_sum/ N_mc) 
+                        * (energy_array[i] - 100*en_sum/ N_mc);
+            sigma_mplanar += (m_planar_array[i] -100* mplanar/ N_mc) 
+                               * (m_planar_array[i] -100* mplanar/ N_mc) ;
 
-            sigma_mperp += (m_perp_array[i] - mperp/ N_mc)
-                           * (m_perp_array[i] - mperp/ N_mc) ;
+            sigma_mperp += (m_perp_array[i] -100* mperp/ N_mc)
+                           * (m_perp_array[i] - 100*mperp/ N_mc) ;
         }
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
         fout.precision(2);fout << setw(6) << theta;
         fout.precision(7);fout << setw(25)<< en_sum / (no_of_sites*N_mc) 
-                          << setw(15)<< sqrt(sigma_en) / (no_of_sites*N_mc)
+                          << setw(15)<< 100*sqrt(sigma_en) / (no_of_sites*N_mc)
                           << endl;
         // printing energy to file "Energy.dat"
 
@@ -341,9 +341,9 @@ int main(int argc, char const * argv[])
         f1out << setw(15)
               <<(mplanar*sin(theta)-mperp*cos(theta))/(no_of_sites*N_mc)
               << setw(15) << mplanar/(no_of_sites*N_mc)
-              << setw(15) << sqrt(sigma_mplanar)/(no_of_sites*N_mc)
+              << setw(15) << 100*sqrt(sigma_mplanar)/(no_of_sites*N_mc)
               << setw(15) << mperp/(no_of_sites*N_mc)
-              << setw(15) << sqrt(sigma_mperp)/(no_of_sites*N_mc)  << endl;
+              << setw(15) << 100*sqrt(sigma_mperp)/(no_of_sites*N_mc)  << endl;
 // printing magnetization to file "mag.dat"
 //  (hz mx -  hz my)/h
         mplanar=0;
