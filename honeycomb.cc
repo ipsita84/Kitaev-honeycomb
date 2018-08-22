@@ -40,7 +40,8 @@ double energy_tot(array_2d_float sitespin, array_2d_float J1,array_2d_float J2,
        array_2d_int B, array_2d_int rotateleftA, array_2d_int cornerA);
 
 //No.of Monte Carlo updates we want
-const unsigned int N_mc = 1e5;
+const unsigned int nmore=100;
+const unsigned int N_mc = 1e5*nmore;
 
 const double beta=0.1;
 //const double K= -60, G = 30 ;

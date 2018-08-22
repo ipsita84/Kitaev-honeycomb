@@ -45,6 +45,7 @@ array_2d_int cornerB, int row, int col, int sublat);
 
 
 //No.of Monte Carlo updates we want
+const unsigned int nmore=100;
 const unsigned int N_mc = 1e5;
 
 const double beta=0.1;
@@ -224,7 +225,7 @@ int main(int argc, char const * argv[])
 
     double energy(0);
     double en_sum;
-
+/////////////////////////MAIN LOOP STARTS//////////////////////////////////////
      for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
     {
         double theta = 0 + thetasteps * pi/100 ;
@@ -232,11 +233,12 @@ int main(int argc, char const * argv[])
         h[1] = 30.0*sin(theta);
         energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
         en_sum =0;
-        std::array <double, N_mc> energy_array =  {0};
-        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
+        std::array <double, N_mc/nmore> energy_array =  {0};
+        std::array <double, N_mc/nmore> m_planar_array={0}, m_perp_array ={0};
         unsigned int heating = 1e5;
+        unsigned int count = heating;
 
-        for (unsigned int i = 1; i <=heating + N_mc; ++i)
+        for (unsigned int i = 1; i <=heating + N_mc*nmore; ++i)
         {
             for (unsigned int j = 1; j <= no_of_sites; ++j)
             {
@@ -297,10 +299,10 @@ int main(int argc, char const * argv[])
  
             }
 
-            if (i >  heating )
-            {
+            if (i >  heating && i==count+ 1)
+            {   count = count + nmore;
                 en_sum += energy;
-                energy_array[i- heating  -1] = energy;
+                energy_array[(i- heating  -1)/nmore] = energy;
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
@@ -308,7 +310,7 @@ int main(int argc, char const * argv[])
                   m_planar_array[i- heating  -1] += sitespin[0][l] ;
  
                   mperp += sitespin[1][l] ;
-                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                  m_perp_array[(i- heating  -1)/100] += sitespin[1][l];
                 }//plane is the xz-plane; perp is y
 
             }
