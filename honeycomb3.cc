@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 honeycomb-updated.cc -o testo
+//g++ -std=c++11 -Wall -O3 honeycomb3.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 
@@ -236,12 +236,11 @@ int main(int argc, char const * argv[])
         std::array <double, N_mc> energy_array =  {0};
         std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
         unsigned int heating = N_mc;
-        unsigned int count = nmore;
-        unsigned int c=0;
+        
 
         for (unsigned int i = 1; i <=heating + N_mc*nmore; ++i)
         {
-            for (unsigned int j = 1; j <= no_of_sites; ++j)
+            for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
             {
             //Now choose a random spin site at (row,col) & sublattice 0 or 1
                 
@@ -300,22 +299,22 @@ int main(int argc, char const * argv[])
  
             }
 
-            if (i == heating +count)
-            {   //printf("%d\n",c);
+
+            if (i >  heating )
+            {
                 en_sum += energy;
-                energy_array[c] = energy;
+                energy_array[i- heating  -1] = energy;
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
                   mplanar += sitespin[0][l] ;
-                  m_planar_array[c] += sitespin[0][l] ;
+                  m_planar_array[i- heating  -1] += sitespin[0][l] ;
  
                   mperp += sitespin[1][l] ;
-                  m_perp_array[c] += sitespin[1][l];
-                }//plane is the xz-plane; perp is y
-                count = count + nmore;
-                c = c+1;
-             }
+                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                }
+
+            }
 
         }
 
