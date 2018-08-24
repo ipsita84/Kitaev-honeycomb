@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 honeycomb-updated.cc -o testo
+//g++ -std=c++11 -Wall -O3 honeycomb3.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 
@@ -45,11 +45,7 @@ array_2d_int cornerB, int row, int col, int sublat);
 
 
 //No.of Monte Carlo updates we want
-<<<<<<< HEAD
-const unsigned int nmore=100;
-=======
-const unsigned int nmore=10;
->>>>>>> ff0465fa25ba648d6dc249eca2a72d524ae574a9
+const unsigned int nmore=1;
 const unsigned int N_mc = 1e5;
 
 const double beta=0.1;
@@ -200,7 +196,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J1[comp1][comp2];
-            printf (" % f\n",J1[comp1][comp2]);
+            //printf (" % f\n",J1[comp1][comp2]);
 
         }
     }
@@ -210,7 +206,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J2[comp1][comp2];
-            printf (" % f\n",J2[comp1][comp2]);
+            //printf (" % f\n",J2[comp1][comp2]);
 
         }
     }
@@ -220,7 +216,7 @@ int main(int argc, char const * argv[])
         {
 
             gin>>J3[comp1][comp2];
-            printf (" % f\n",J2[comp1][comp2]);
+            //printf (" % f\n",J2[comp1][comp2]);
 
         }
     }
@@ -233,26 +229,18 @@ int main(int argc, char const * argv[])
      for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
     {
         double theta = 0 + thetasteps * pi/100 ;
-        h[0] = 30.0*cos(theta);
-        h[1] = 30.0*sin(theta);
+        h[0] = 500.0*cos(theta);
+        h[1] = 500.0*sin(theta);
         energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
         en_sum =0;
-<<<<<<< HEAD
-        std::array <double, N_mc/nmore> energy_array =  {0};
-        std::array <double, N_mc/nmore> m_planar_array={0}, m_perp_array ={0};
-        unsigned int heating = 1e5;
-        unsigned int count = heating;
-=======
         std::array <double, N_mc> energy_array =  {0};
         std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
         unsigned int heating = N_mc;
-        unsigned int count = nmore;
-        unsigned int c=0;
->>>>>>> ff0465fa25ba648d6dc249eca2a72d524ae574a9
+        
 
         for (unsigned int i = 1; i <=heating + N_mc*nmore; ++i)
         {
-            for (unsigned int j = 1; j <= no_of_sites; ++j)
+            for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
             {
             //Now choose a random spin site at (row,col) & sublattice 0 or 1
                 
@@ -311,33 +299,22 @@ int main(int argc, char const * argv[])
  
             }
 
-<<<<<<< HEAD
-            if (i >  heating && i==count+ 1)
-            {   count = count + nmore;
+
+            if (i >  heating )
+            {
                 en_sum += energy;
-                energy_array[(i- heating  -1)/nmore] = energy;
-=======
-            if (i == heating +count)
-            {   //printf("%d\n",c);
-                en_sum += energy;
-                energy_array[c] = energy;
->>>>>>> ff0465fa25ba648d6dc249eca2a72d524ae574a9
+                energy_array[i- heating  -1] = energy;
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
                   mplanar += sitespin[0][l] ;
-                  m_planar_array[c] += sitespin[0][l] ;
+                  m_planar_array[i- heating  -1] += sitespin[0][l] ;
  
                   mperp += sitespin[1][l] ;
-<<<<<<< HEAD
-                  m_perp_array[(i- heating  -1)/100] += sitespin[1][l];
-=======
-                  m_perp_array[c] += sitespin[1][l];
->>>>>>> ff0465fa25ba648d6dc249eca2a72d524ae574a9
-                }//plane is the xz-plane; perp is y
-                count = count + nmore;
-                c = c+1;
-             }
+                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                }
+
+            }
 
         }
 
