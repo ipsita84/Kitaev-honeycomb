@@ -19,6 +19,8 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
+const double hmag =500.0;
+const double beta_we_want =0.1;
 
 // Define lattice constants
 const int axis1 = 10, axis2 = axis1;
@@ -47,8 +49,9 @@ array_2d_int cornerB, int row, int col, int sublat);
 //No.of Monte Carlo updates we want
 const unsigned int nmore=1;
 const unsigned int N_mc = 1e5;
+const unsigned int heating = N_mc;
 
-const double beta=0.1;
+
 //const double K= -60, G = 30 ;
 
 
@@ -69,12 +72,12 @@ int main(int argc, char const * argv[])
   
 	for (unsigned int j = 0; j < no_of_sites ; ++j)
 	{	int alpha = (j+1)%(2*axis1);
-		int beta = ceil(double(j+1)/ double(2*axis1) );
+		int betaa = ceil(double(j+1)/ double(2*axis1) );
 		int gamma = ceil(double(alpha)/ double(2)) ;
 		int delta = alpha % 2;
 
-		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(beta)*sqrt(3.0)*cos(pi/3.0);
-		sitepos[j][1] =-double(beta)*sqrt(3.0)*sin(pi/3.0)+ double(delta);
+		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(betaa)*sqrt(3.0)*cos(pi/3.0);
+		sitepos[j][1] =-double(betaa)*sqrt(3.0)*sin(pi/3.0)+ double(delta);
 
         //printf ("x %f y %f \n", sitepos[j][0], sitepos[j][1]);
 
@@ -221,24 +224,14 @@ int main(int argc, char const * argv[])
         }
     }
     gin.close();
-
-
+/////////////////////////////////////////////////////////////////////////
+////Simulated Annealing  //////////////////////////
     double energy(0);
     double en_sum;
-/////////////////////////MAIN LOOP STARTS//////////////////////////////////////
-     for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
-    {
-        double theta = 0 + thetasteps * pi/100 ;
-        h[0] = 500.0*cos(theta);
-        h[1] = 500.0*sin(theta);
-        energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
-        en_sum =0;
-        std::array <double, N_mc> energy_array =  {0};
-        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
-        unsigned int heating = N_mc;
-        
-
-        for (unsigned int i = 1; i <=heating + N_mc*nmore; ++i)
+    double beta = heating;
+    h[0] = hmag ;
+    h[1] = 0;
+    for (unsigned int i = 1; i <=heating; ++i)
         {
             for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
             {
@@ -280,7 +273,86 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta/50);
+               double acc_ratio = exp(-1.0 * energy_diff* beta);
+               double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
+                //Spin flipped if r <= acceptance ratio
+                if (r <= acc_ratio)
+                {
+                    energy = energy_new ;
+    
+                }
+                if (r > acc_ratio)
+                {
+                    sitespin[0][label] = s0;
+                    sitespin[1][label] = s1;
+                    sitespin[2][label] = s2;
+                    energy = energy_old ;
+
+                }
+ 
+            }
+    beta = beta-1;
+
+    }
+
+
+
+    beta=beta_we_want;
+/////////////////////////MAIN LOOP STARTS//////////////////////////////////////
+     for (unsigned int thetasteps=0; thetasteps<101; ++thetasteps)
+    {
+        double theta = 0 + thetasteps * pi/100 ;
+        h[0] = hmag *cos(theta);
+        h[1] = hmag *sin(theta);
+        energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
+        en_sum =0;
+        std::array <double, N_mc> energy_array =  {0};
+        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
+        
+
+        for (unsigned int i = 1; i <=N_mc; ++i)
+        {
+            for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
+            {
+            //Now choose a random spin site at (row,col) & sublattice 0 or 1
+                
+                int row = roll_coin(0, axis1-1);
+                int col = roll_coin(0, axis2-1);
+                int sublat =roll_coin(0,1);
+                  
+                int label;
+                if (sublat == 0) label = A[row][col]-1;
+                else label = B[row][col]-1;
+
+                double s0 = sitespin[0][label];
+                double s1 = sitespin[1][label];
+                double s2 = sitespin[2][label];
+                double energy_old =energy ;
+                double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
+                J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
+  
+                double r0 = 0.5*random_real(-1, 1)/beta;
+                double r1 = 0.5*random_real(-1, 1)/beta;
+                double r2 = 0.5*random_real(-1, 1)/beta;
+                double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
+                //printf ("tot %f \n",tot);
+
+                sitespin[0][label] = (s0+r0)/sqrt(tot);
+                sitespin[1][label] = (s1+r1)/sqrt(tot);
+                sitespin[2][label]= (s2+r2)/sqrt(tot);
+// algo from pg-24 of
+// https://journals-aps-org.proxy.library.cornell.edu/prb/pdf/10.1103/PhysRevB.24.1391
+
+               double checksum= pow(sitespin[0][label],2)
+                               +pow(sitespin[1][label],2)
+                               +pow(sitespin[2][label],2);
+               if (checksum > 1.00001) {printf ("%f error \n", checksum);}
+
+               double energy_new = energy_minus_rnd_site+nn_energy(sitespin,J1,
+                J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
+
+               double energy_diff = energy_new - energy_old;
+               double acc_ratio = exp(-1.0 * energy_diff* beta);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)

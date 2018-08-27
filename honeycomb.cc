@@ -64,12 +64,12 @@ int main(int argc, char const * argv[])
   
 	for (unsigned int j = 0; j < no_of_sites ; ++j)
 	{	int alpha = (j+1)%(2*axis1);
-		int beta = ceil(double(j+1)/ double(2*axis1) );
+		int betaa = ceil(double(j+1)/ double(2*axis1) );
 		int gamma = ceil(double(alpha)/ double(2)) ;
 		int delta = alpha % 2;
 
-		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(beta)*sqrt(3.0)*cos(pi/3.0);
-		sitepos[j][1] =-double(beta)*sqrt(3.0)*sin(pi/3.0)+ double(delta);
+		sitepos[j][0] = double(gamma)*sqrt(3.0)-double(betaa)*sqrt(3.0)*cos(pi/3.0);
+		sitepos[j][1] =-double(betaa)*sqrt(3.0)*sin(pi/3.0)+ double(delta);
 
         //printf ("x %f y %f \n", sitepos[j][0], sitepos[j][1]);
 
@@ -236,7 +236,7 @@ int main(int argc, char const * argv[])
                 double energy_new = energy_tot(sitespin,J1,J2,J3,h,A,B,
                                                 rotateleftA,cornerA);
                 double energy_diff = energy_new - energy_old;
-                double acc_ratio = exp(-1.0 * energy_diff* beta/60);
+                double acc_ratio = exp(-1.0 * energy_diff* beta);
                 double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)

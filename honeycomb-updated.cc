@@ -292,7 +292,7 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta/50);
+               double acc_ratio = exp(-1.0 * energy_diff* beta);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)
