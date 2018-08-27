@@ -19,7 +19,7 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
-const double hmag =500.0;
+const double hmag =50.0;
 const double beta_we_want =0.1;
 
 // Define lattice constants
@@ -228,11 +228,11 @@ int main(int argc, char const * argv[])
 ////Simulated Annealing  //////////////////////////
     double energy(0);
     double en_sum;
-    double beta = heating;
+    double beta;
     h[0] = hmag ;
     h[1] = 0;
     for (unsigned int i = 1; i <=heating; ++i)
-        {
+        {    beta =i * beta_we_want/heating;
             for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
             {
             //Now choose a random spin site at (row,col) & sublattice 0 or 1
@@ -291,8 +291,6 @@ int main(int argc, char const * argv[])
                 }
  
             }
-    beta = beta-1;
-
     }
 
 
