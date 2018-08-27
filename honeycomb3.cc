@@ -372,21 +372,18 @@ int main(int argc, char const * argv[])
             }
 
 
-            if (i >  heating )
-            {
                 en_sum += energy;
-                energy_array[i- heating  -1] = energy;
+                energy_array[i-1] = energy;
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
                   mplanar += sitespin[0][l] ;
-                  m_planar_array[i- heating  -1] += sitespin[0][l] ;
+                  m_planar_array[i -1] += sitespin[0][l] ;
  
                   mperp += sitespin[1][l] ;
-                  m_perp_array[i- heating  -1] += sitespin[1][l];
+                  m_perp_array[i -1] += sitespin[1][l];
                 }
 
-            }
 
         }
 
