@@ -19,7 +19,7 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
-const double hmag =50.0;
+const double hmag =500.0;
 const double beta_we_want =0.1;
 
 // Define lattice constants
@@ -189,6 +189,7 @@ int main(int argc, char const * argv[])
 
     ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
     ofstream fout("energy.dat", std::fstream::app);
+    ofstream f2out("acc_rate.dat");
     f1out << "theta \t tau \t mag_planar (x-dirn) \t error"
      <<"\t mag_perp (z-dirn) \t error"<<endl;
 
@@ -297,7 +298,7 @@ int main(int argc, char const * argv[])
                 }
  
             }
-           fout << i<< '\t'<< beta  << energy 
+           f2out << i<< '\t'<< beta<< '\t'  << energy 
                     << '\t' << double(moves_accepted)/(no_of_sites) << endl;
             
     }
@@ -432,11 +433,15 @@ int main(int argc, char const * argv[])
  
 	fout.close();
 	f1out.close();
+    f2out.close();
 	
 	return 0;
 }
 
 
+
+
+/////////////////////FUNCTIONS////////////////////////////////////////////////
 
 //function to calculate total energy
 //for a given spin configuration with pbc
