@@ -1,4 +1,4 @@
-theta 	 tau 	 mag_planar (x-dirn) 	 error	 mag_perp (z-dirn) 	 error
+heta 	 tau 	 mag_planar (x-dirn) 	 error	 mag_perp (z-dirn) 	 error
   0.00      0.0577319      0.9786418      0.0000048     -0.0577319      0.0000318
   0.03      0.0556594      0.9797415      0.0000048     -0.0248972      0.0000327
   0.06      0.0536263      0.9798254      0.0000047      0.0079131      0.0000333
