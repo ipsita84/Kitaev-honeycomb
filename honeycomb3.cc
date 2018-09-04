@@ -229,14 +229,18 @@ int main(int argc, char const * argv[])
     double energy(0);
     double en_sum;
     double beta;
+    unsigned int moves_accepted(0);
+
+
     h[0] = hmag ;
     h[1] = 0;
     for (unsigned int i = 1; i <=heating; ++i)
         {    beta =i * beta_we_want/heating;
+             moves_accepted =0;
             for (unsigned int j = 1; j <= no_of_sites*nmore; ++j)
             {
             //Now choose a random spin site at (row,col) & sublattice 0 or 1
-                
+
                 int row = roll_coin(0, axis1-1);
                 int col = roll_coin(0, axis2-1);
                 int sublat =roll_coin(0,1);
@@ -273,12 +277,14 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta);
+               double acc_ratio = exp(-1.0 * energy_diff* beta/100.0);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)
                 {
                     energy = energy_new ;
+                    moves_accepted = moves_accepted +1;
+                    // cout << "energy changed" <<endl;
     
                 }
                 if (r > acc_ratio)
@@ -291,6 +297,9 @@ int main(int argc, char const * argv[])
                 }
  
             }
+           fout << i<< '\t'<< beta  << energy 
+                    << '\t' << double(moves_accepted)/(no_of_sites) << endl;
+            
     }
 
 
@@ -350,7 +359,7 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta);
+               double acc_ratio = exp(-1.0 * energy_diff* beta/100.0);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)
