@@ -1,5 +1,5 @@
 # Veusz saved document (version 2.1.1)
-# Saved at 2018-09-05T11:57:41.866660
+# Saved at 2018-09-05T12:28:25.300097
 
 AddImportPath('/home/ipsita/ongoing-projects/kitaev-michael/Kitaev-honeycomb')
 ImportFile(u'mag.dat', u'theta tauz mx +-  my +-', ignoretext=True, linked=True)
@@ -11,6 +11,8 @@ To(u'graph1')
 Add('axis', name=u'x', autoadd=False)
 To(u'x')
 Set('label', u'\\theta')
+Set('min', 0.0)
+Set('max', 3.15)
 To('..')
 Add('axis', name=u'y', autoadd=False)
 To(u'y')
