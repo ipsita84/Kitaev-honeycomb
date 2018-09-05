@@ -1,5 +1,5 @@
 # Veusz saved document (version 2.1.1)
-# Saved at 2018-09-05T12:28:25.300097
+# Saved at 2018-09-05T13:24:32.315643
 
 AddImportPath('/home/ipsita/ongoing-projects/kitaev-michael/Kitaev-honeycomb')
 ImportFile(u'mag.dat', u'theta tauz mx +-  my +-', ignoretext=True, linked=True)
