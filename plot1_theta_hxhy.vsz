@@ -1,5 +1,5 @@
 # Veusz saved document (version 2.1.1)
-# Saved at 2018-08-19T21:55:46.511920
+# Saved at 2018-09-05T11:57:41.866660
 
 AddImportPath('/home/ipsita/ongoing-projects/kitaev-michael/Kitaev-honeycomb')
 ImportFile(u'mag.dat', u'theta tauz mx +-  my +-', ignoretext=True, linked=True)
@@ -34,11 +34,11 @@ Set('PlotLine/hide', True)
 To('..')
 Add('key', name=u'key1', autoadd=False)
 To(u'key1')
-Set('title', u'h_{x}=30 cos \\theta, h_{y}=30 sin \\theta, h_{z}=0\\\\\\beta =0.1, J1.dat')
+Set('title', u'h_{x}=50 cos \\theta, h_{y}=50 sin \\theta, h_{z}=0\\\\\\beta =0.1, K=-600, G=300')
 Set('horzPosn', u'manual')
 Set('vertPosn', u'manual')
-Set('horzManual', 0.43297705549498217)
-Set('vertManual', 0.8106103413422894)
+Set('horzManual', 0.17625008953370846)
+Set('vertManual', 0.7994922443912106)
 To('..')
 To('..')
 To('..')
