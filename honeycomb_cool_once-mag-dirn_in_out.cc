@@ -6,6 +6,8 @@
 //the perp vector is (1,1,1)/ \sqrt{3} and we choose the in-plane dirn as r2/\sqrt{2}
 // giving H = hmag sin theta (1,1,1)/ \sqrt{3} + hmag cos theta (-1,1,0)/ \sqrt{2}
 // tau  is obtained from cross product of h and magnetizaion vector
+// unit vector perp to r2 and h is rperp = (2,2,-1)/3.0
+// so we need to plot tauperp = tau . rperp
 
 
 
@@ -198,7 +200,7 @@ int main(int argc, char const * argv[])
     ofstream fout("energy.dat", std::fstream::app);
     ofstream f2out("acc_rate.dat");
     f1out << "theta \t taux \t tauy \t  tauz "
-          <<" \t tau \t  mx error\t my error \t mz error"<<endl;
+          <<" \t tau_perp \t  mx error\t my error \t mz error"<<endl;
 
     ifstream gin("J.dat");
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -439,7 +441,7 @@ int main(int argc, char const * argv[])
         f1out << setw(12)<< taux/(no_of_sites*N_mc)
               << setw(12) << tauy/(no_of_sites*N_mc)
               << setw(12) << tauz/(no_of_sites*N_mc)
-              << setw(12) << sqrt(taux*taux+tauy*tauy+tauz*tauz)/(no_of_sites*N_mc)
+              << setw(12) << (2*taux+2*tauy-tauz)/(no_of_sites*N_mc*3.0)
               << setw(12) << sqrt(sigma_mx)/(no_of_sites*N_mc)  
               << setw(12) << sqrt(sigma_my)/(no_of_sites*N_mc) 
               << setw(12) << sqrt(sigma_mz)/(no_of_sites*N_mc) << endl;
