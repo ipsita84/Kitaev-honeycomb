@@ -1,5 +1,5 @@
 # Veusz saved document (version 1.24)
-# Saved at 2018-09-06T20:20:45.172434
+# Saved at 2018-09-06T20:46:29.075019
 
 AddImportPath('/home/ipsita/ongoing-projects/kitaev-2d-michael/Kitaev-honeycomb/h-dirn-unfixed')
 ImportFile(u'mag1.dat', u'theta tauz mx +- mz +-', ignoretext=True, linked=True)
@@ -29,7 +29,7 @@ Set('PlotLine/hide', True)
 To('..')
 Add('label', name=u'label1', autoadd=False)
 To(u'label1')
-Set('label', u'hmag=500, K=-60, G=30, h dirn corrected')
+Set('label', u'hmag=500, K=-60, G=30, \\beta=0.1')
 Set('xPos', [0.21])
 Set('yPos', [0.918])
 To('..')
