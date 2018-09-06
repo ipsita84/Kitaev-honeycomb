@@ -5,6 +5,10 @@
 //the plane formed by cutting the 3 points (1,0,0), (0,1,0) and  (0,0,1)
 //the perp vector is (1,1,1)/ \sqrt{3} and we choose the in-plane dirn as r2/\sqrt{2}
 // giving H = hmag sin theta (1,1,1)/ \sqrt{3} + hmag cos theta (-1,1,0)/ \sqrt{2}
+// tau  is obtained from cross product of h and magnetizaion vector
+
+
+
 #include <iostream>
 #include <iomanip>
 #include <fstream>
