@@ -439,11 +439,11 @@ int main(int argc, char const * argv[])
 
     f1out << "hmag ="<<hmag <<"\t beta = "<< beta<<"\t K ="<<J1[0][0]<<
              " \t G="<<J1[1][2] <<endl;
-    f1out << "system cooled every time theta chnages " <<endl;
+    f1out << "system cooled once for theta equal to zero " <<endl;
 
     f1out << "hmag ="<<hmag <<"\t beta = "<< beta<<"\t K ="<<J1[0][0]<<
              " \t G="<<J1[1][2] <<endl;
-    fout << "system cooled every time theta chnages " <<endl;
+    fout << "system cooled once for theta equal to zero " <<endl;
 
 	fout.close();
 	f1out.close();
