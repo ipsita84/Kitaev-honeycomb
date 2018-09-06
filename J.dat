@@ -1,0 +1,59 @@
+-600
+0 
+0
+0 
+0 
+300
+0 
+300
+0
+0 
+0 
+30
+0 
+-600
+0
+30
+0 
+0
+0 
+300
+0
+300
+0 
+0
+0 
+0 
+-600
+
+
+
+
+
+
+
+xx bond:
+
+J1 = 
+K 0 0
+0 0 G
+0 G 0
+
+yy bond:
+
+J2= 
+0 0 G
+0 K 0
+G 0 0
+
+zz bond:
+
+J3 = 
+0 G 0
+G 0 0
+0 0 K
+
+These three matrices are related to each other by a cyclic permutation. One serious study expects the values of K and G = \Gamma to be K = - 5 meV and \Gamma = +2.5 meV (see http://iopscience.iop.org/article/10.1088/1361-648X/aa8cf5/pdf). (1 meV ) e = k_B T
+So the temperature corresponding to 1 meV is:
+T = 0.001 e/k_B = 11.6
+So K = - 5 meV = -58 K ~ -60 K and \Gamma = 2.5 meV ~ 30 K. 

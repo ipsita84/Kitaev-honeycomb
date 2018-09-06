@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 honeycomb_cool_once-mag-dirn_in_out.cc -o testo
+//g++ -std=c++11 -Wall -O3 honeycomb_cool_once.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 // in-plane vectors are r1=(0,1,-1), r2= =(-1,1,0), r3 =(0,1,-1) as they lie on 
