@@ -19,7 +19,7 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
-const double hmag =50.0;
+const double hmag =500.0;
 const double beta_we_want =0.1;
 
 // Define lattice constants
