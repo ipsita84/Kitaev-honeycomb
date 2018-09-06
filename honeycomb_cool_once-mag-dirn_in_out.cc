@@ -186,15 +186,15 @@ int main(int argc, char const * argv[])
     array_2d_float J1(boost::extents[3][3]);
     array_2d_float J2(boost::extents[3][3]);
     array_2d_float J3(boost::extents[3][3]);
-    double mplanar=0, mperp=0;
+    double mx=0, my=0, mz=0;
 
     //Read the random signed bonds for a particular stored realization
 
     ofstream f1out("mag.dat",std::fstream::app);	// Opens a file for output
     ofstream fout("energy.dat", std::fstream::app);
     ofstream f2out("acc_rate.dat");
-    f1out << "theta \t tau \t mag_planar (x-dirn) \t error"
-     <<"\t mag_perp (z-dirn) \t error"<<endl;
+    f1out << "theta \t taux \t tauy \t  tauz "
+          <<" \t tau \t  mx error\t my error \t mz error"<<endl;
 
     ifstream gin("J.dat");
     for (unsigned int comp1=0; comp1<3; ++comp1)
@@ -320,7 +320,7 @@ int main(int argc, char const * argv[])
         energy = energy_tot(sitespin,J1,J2,J3,h,A,B,rotateleftA,cornerA);
         en_sum =0;
         std::array <double, N_mc> energy_array =  {0};
-        std::array <double, N_mc> m_planar_array={0}, m_perp_array ={0};
+        std::array <double, N_mc> mx_array={0}, my_array ={0}, mz_array ={0};
         
 
         for (unsigned int i = 1; i <=N_mc; ++i)
@@ -390,27 +390,31 @@ int main(int argc, char const * argv[])
  
                 for (unsigned int l = 0; l < no_of_sites; ++l)
                 {
-                  mplanar += sitespin[0][l] ;
-                  m_planar_array[i -1] += sitespin[0][l] ;
+                  mx += sitespin[0][l] ;
+                  mx_array[i -1] += sitespin[0][l] ;
  
-                  mperp += sitespin[1][l] ;
-                  m_perp_array[i -1] += sitespin[1][l];
+                  my += sitespin[1][l] ;
+                  my_array[i -1] += sitespin[1][l];
+
+                  mz += sitespin[2][l] ;
+                  mz_array[i -1] += sitespin[2][l];
                 }
 
 
         }
 
  
-        double sigma_en = 0, sigma_mplanar = 0, sigma_mperp = 0;
+        double sigma_en = 0, sigma_mx = 0, sigma_my = 0, sigma_mz = 0;
         for (unsigned int ii=0; ii < N_mc; ++ii)
         {
             sigma_en += (energy_array[ii] - en_sum/ N_mc) 
                         * (energy_array[ii] - en_sum/ N_mc);
-            sigma_mplanar += (m_planar_array[ii] - mplanar/ N_mc) 
-                               * (m_planar_array[ii] - mplanar/ N_mc) ;
 
-            sigma_mperp += (m_perp_array[ii] - mperp/ N_mc)
-                           * (m_perp_array[ii] - mperp/ N_mc) ;
+            sigma_mx += (mx_array[ii] - mx/ N_mc) * (mx_array[ii] - mx/ N_mc) ;
+
+            sigma_my += (my_array[ii] - my/ N_mc)* (my_array[ii] - my/ N_mc) ;
+
+            sigma_mz += (mz_array[ii] - mz/ N_mc)* (mz_array[ii] - mz/ N_mc) ;
         }
 
         fout.setf( ios_base::fixed, ios_base::floatfield );
@@ -420,20 +424,24 @@ int main(int argc, char const * argv[])
                           << endl;
         // printing energy to file "Energy.dat"
 
+        double taux = (mz-my)*sin(theta)/sqrt(3)-mz*cos(theta)/sqrt(2);
+        double tauy = (mx-mz)*sin(theta)/sqrt(3)+mz*cos(theta)/sqrt(2);
+        double tauz = (my-mx)*sin(theta)/sqrt(3)-(mx+my)*cos(theta)/sqrt(2);
+
         f1out.setf( ios_base::fixed, ios_base::floatfield );
         f1out.precision(2);
         f1out << setw(6) << theta;
         f1out.precision(7);
-        f1out << setw(15)
-              <<(mplanar*sin(theta)-mperp*cos(theta))/(no_of_sites*N_mc)
-              << setw(15) << mplanar/(no_of_sites*N_mc)
-              << setw(15) << sqrt(sigma_mplanar)/(no_of_sites*N_mc)
-              << setw(15) << mperp/(no_of_sites*N_mc)
-              << setw(15) << sqrt(sigma_mperp)/(no_of_sites*N_mc)  << endl;
-// printing magnetization to file "mag.dat"
-//  (hz mx -  hz my)/h
-        mplanar=0;
-        mperp=0;
+        f1out << setw(12)<< taux/(no_of_sites*N_mc)
+              << setw(12) << tauy/(no_of_sites*N_mc)
+              << setw(12) << tauz/(no_of_sites*N_mc)
+              << setw(12) << sqrt(taux*taux+tauy*tauy+tauz*tauz)/(no_of_sites*N_mc)
+              << setw(12) << sqrt(sigma_mx)/(no_of_sites*N_mc)  
+              << setw(12) << sqrt(sigma_my)/(no_of_sites*N_mc) 
+              << setw(12) << sqrt(sigma_mz)/(no_of_sites*N_mc) << endl;
+// printing tau to file "mag.dat"
+
+        mx=0; my=0; mz=0;
     }
  
 
