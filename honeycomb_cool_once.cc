@@ -60,7 +60,7 @@ const unsigned int N_mc = 1e5;
 const unsigned int heating = N_mc;
 
 
-const double k= -60, g = 30 ;
+const double k= -60.0, g = 30.0 ;
 const double hmag =5.0;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -211,7 +211,7 @@ J2[2][0]=g; J2[2][1]=0; J2[2][2]=0;
 
 J3[0][0]=0; J3[0][1]=g; J3[0][2]=0;
 J3[1][0]=g; J3[1][1]=0; J3[1][2]=0;
-J3[2][0]=0; J31[2][1]=0; J3[2][2]=k;
+J3[2][0]=0; J3[2][1]=0; J3[2][2]=k;
 
 
 
@@ -416,7 +416,7 @@ J3[2][0]=0; J31[2][1]=0; J3[2][2]=k;
         double tauz = (my-mx)*sin(theta)/sqrt(3)-(mx+my)*cos(theta)/sqrt(2);
 
         f1out.setf( ios_base::fixed, ios_base::floatfield );
-        f1out.precision(2);
+        f1out.precision(4);
         f1out << setw(6) << theta;
         f1out.precision(7);
         f1out << setw(12)<< taux/(no_of_sites*N_mc)
