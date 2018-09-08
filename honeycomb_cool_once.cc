@@ -28,7 +28,6 @@ boost::random::mt19937 gen;
 using namespace std;
 
 const double pi = acos(-1.0);
-const double hmag =5.0;
 const double beta_we_want =1;
 
 // Define lattice constants
@@ -61,8 +60,8 @@ const unsigned int N_mc = 1e5;
 const unsigned int heating = N_mc;
 
 
-//const double K= -60, G = 30 ;
-
+const double k= -60, g = 30 ;
+const double hmag =5.0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -202,38 +201,20 @@ int main(int argc, char const * argv[])
     f1out << "theta \t taux \t tauy \t  tauz "
           <<" \t tau_perp \t  mx error\t my error \t mz error"<<endl;
 
-    ifstream gin("J.dat");
-    for (unsigned int comp1=0; comp1<3; ++comp1)
-    {
-        for (unsigned int comp2=0; comp2<3; ++comp2)
-        {
+J1[0][0]=k; J1[0][1]=0; J1[0][2]=0;
+J1[1][0]=0; J1[1][1]=0; J1[1][2]=g;
+J1[2][0]=0; J1[2][1]=g; J1[2][2]=0;
 
-            gin>>J1[comp1][comp2];
-            //printf (" % f\n",J1[comp1][comp2]);
+J2[0][0]=0; J2[0][1]=0; J2[0][2]=g;
+J2[1][0]=0; J2[1][1]=k; J2[1][2]=0;
+J2[2][0]=g; J2[2][1]=0; J2[2][2]=0;
 
-        }
-    }
-    for (unsigned int comp1=0; comp1<3; ++comp1)
-    {
-        for (unsigned int comp2=0; comp2<3; ++comp2)
-        {
+J3[0][0]=0; J3[0][1]=g; J3[0][2]=0;
+J3[1][0]=g; J3[1][1]=0; J3[1][2]=0;
+J3[2][0]=0; J31[2][1]=0; J3[2][2]=k;
 
-            gin>>J2[comp1][comp2];
-            //printf (" % f\n",J2[comp1][comp2]);
 
-        }
-    }
-    for (unsigned int comp1=0; comp1<3; ++comp1)
-    {
-        for (unsigned int comp2=0; comp2<3; ++comp2)
-        {
 
-            gin>>J3[comp1][comp2];
-            //printf (" % f\n",J2[comp1][comp2]);
-
-        }
-    }
-    gin.close();
 /////////////////////////////////////////////////////////////////////////
 ////Simulated Annealing  //////////////////////////
     double energy(0);
@@ -267,9 +248,9 @@ int main(int argc, char const * argv[])
                 double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
   
-                double r0 = 0.5*random_real(-1, 1)/50.0;
-                double r1 = 0.5*random_real(-1, 1)/50.0;
-                double r2 = 0.5*random_real(-1, 1)/50.0;
+                double r0 = 0.5*random_real(-1, 1)/hmag;
+                double r1 = 0.5*random_real(-1, 1)/hmag;
+                double r2 = 0.5*random_real(-1, 1)/hmag;
                 double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
                 //printf ("tot %f \n",tot);
 
@@ -350,9 +331,9 @@ int main(int argc, char const * argv[])
                 double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
   
-                double r0 = 0.5*random_real(-1, 1)/50.0;
-                double r1 = 0.5*random_real(-1, 1)/50.0;
-                double r2 = 0.5*random_real(-1, 1)/50.0;
+                double r0 = 0.5*random_real(-1, 1)/hmag;
+                double r1 = 0.5*random_real(-1, 1)/hmag;
+                double r2 = 0.5*random_real(-1, 1)/hmag;
                 double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
                 //printf ("tot %f \n",tot);
 
