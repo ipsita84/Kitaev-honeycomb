@@ -101,7 +101,7 @@ theta 	 tau 	 mag_planar (x-dirn) 	 error	 mag_perp (z-dirn) 	 error
   3.11      0.0221991     -0.2110552      0.0001449      0.0288427      0.0001487
   3.14      0.0224838     -0.2116548      0.0001453      0.0224838      0.0001494
 --------------------------------------------------------------------------------
-hx =500 cos theta, hy = 500 sin theta, hz = 0, beta cooling each time
+hx =500 cos theta, hy = 500 sin theta, hz = 0, beta cooling each time, beta=0.001
 
 -600
 0 

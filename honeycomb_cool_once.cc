@@ -29,7 +29,7 @@ using namespace std;
 
 const double pi = acos(-1.0);
 const double hmag =50.0;
-const double beta_we_want =0.1;
+const double beta_we_want =1;
 
 // Define lattice constants
 const int axis1 = 10, axis2 = axis1;
@@ -267,9 +267,9 @@ int main(int argc, char const * argv[])
                 double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
   
-                double r0 = 0.5*random_real(-1, 1)/beta;
-                double r1 = 0.5*random_real(-1, 1)/beta;
-                double r2 = 0.5*random_real(-1, 1)/beta;
+                double r0 = 0.5*random_real(-1, 1)/50.0;
+                double r1 = 0.5*random_real(-1, 1)/50.0;
+                double r2 = 0.5*random_real(-1, 1)/50.0;
                 double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
                 //printf ("tot %f \n",tot);
 
@@ -288,7 +288,7 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta/100.0);
+               double acc_ratio = exp(-1.0 * energy_diff* beta);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)
@@ -350,9 +350,9 @@ int main(int argc, char const * argv[])
                 double energy_minus_rnd_site =energy_old -nn_energy(sitespin,J1,
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
   
-                double r0 = 0.5*random_real(-1, 1)/beta;
-                double r1 = 0.5*random_real(-1, 1)/beta;
-                double r2 = 0.5*random_real(-1, 1)/beta;
+                double r0 = 0.5*random_real(-1, 1)/50.0;
+                double r1 = 0.5*random_real(-1, 1)/50.0;
+                double r2 = 0.5*random_real(-1, 1)/50.0;
                 double tot = pow( s0+r0, 2)+pow( s1+ r1, 2)+pow(s2 + r2, 2);
                 //printf ("tot %f \n",tot);
 
@@ -371,7 +371,7 @@ int main(int argc, char const * argv[])
                 J2,J3,h,A,B,rotateleftA,A,rotaterightB,cornerB,row,col,sublat);
 
                double energy_diff = energy_new - energy_old;
-               double acc_ratio = exp(-1.0 * energy_diff* beta/100.0);
+               double acc_ratio = exp(-1.0 * energy_diff* beta);
                double r =  random_real(0, 1) ;	//Generate a random no. r such that 0 < r < 1
                 //Spin flipped if r <= acceptance ratio
                 if (r <= acc_ratio)

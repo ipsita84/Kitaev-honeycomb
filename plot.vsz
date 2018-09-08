@@ -1,5 +1,5 @@
 # Veusz saved document (version 2.1.1)
-# Saved at 2018-09-07T01:37:49.235756
+# Saved at 2018-09-08T01:01:54.898202
 
 AddImportPath('/home/ipsita/ongoing-projects/kitaev-michael/Kitaev-honeycomb')
 ImportFile(u'mag.dat', u'theta taux tauy tauz tauperp mxer myer mzer', ignoretext=True, linked=True)
@@ -27,7 +27,7 @@ Set('PlotLine/hide', True)
 To('..')
 Add('label', name=u'label1', autoadd=False)
 To(u'label1')
-Set('label', u'hmag=500, K=-600, G=300, \\\\\\beta=0.1, h dirn corrected')
+Set('label', u'hmag=500, K=-6, G=3, \\\\\\beta=0.1')
 Set('xPos', [0.21])
 Set('yPos', [0.918])
 To('..')

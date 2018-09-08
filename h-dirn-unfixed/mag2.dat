@@ -163,4 +163,4 @@ T = 0.001 e/k_B = 11.6
 So K = - 5 meV = -58 K ~ -60 K and \Gamma = 2.5 meV ~ 30 K. 
 
 
-beta =0.1, hx = 30 cos theta, hy = 30 sin theta, hz=0
+beta =0.1, hx = 30 cos theta, hy = 30 sin theta, hz=0, beta=1/1000

@@ -103,4 +103,4 @@ theta 	 tau 	 mag_planar (x-dirn) 	 error	 mag_perp (z-dirn) 	 error
 -------------------------
 ----------------------
 G=30, K=-60
-hmag=500,  beta cooling each time
+hmag=500,  beta cooling each time, beta=1/1000
