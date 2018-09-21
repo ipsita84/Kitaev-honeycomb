@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 honeycomb_cool_once.cc -o testo
+//g++ -std=c++11 -Wall -O3 honeycomb_cool-once_spins_recorded.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 // in-plane vectors are r1=(0,1,-1), r2= =(-1,1,0), r3 =(0,1,-1) as they lie on 
@@ -58,12 +58,12 @@ array_2d_int cornerB, int row, int col, int sublat);
 
 //No.of Monte Carlo updates we want
 const unsigned int nmore=1;
-const unsigned int N_mc = 1e1;
+const unsigned int N_mc = 1e5;
 const unsigned int heating = N_mc;
 
 
 const double k= -60.0, g = 30.0 ;
-const double hmag =5.0;
+const double hmag =50.0;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -324,7 +324,7 @@ int main(int argc, char const * argv[])
 	    string theta_str = lexical_cast<string>(theta);
         ofstream sout(string("Spins_T_" +T_str+"_h_" + hmag_str + "_minusK_" + k_str + "_G_"
                     +g_str+"_theta_"+theta_str+ ".dat").c_str(),ios_base::app); 
-        sout << "site number \t x-coord \t y-cord \t sx \t sy \t sy" <<endl;
+        sout << "site number \t x-coord \t y-cord \t sx \t sy \t sz" <<endl;
 
         for (unsigned int i = 1; i <=N_mc; ++i)
         {
