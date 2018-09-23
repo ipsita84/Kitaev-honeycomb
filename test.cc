@@ -65,7 +65,7 @@ int main(int argc, char const * argv[])
     string g_str = lexical_cast<string>(g);
     string T_str = lexical_cast<string>(1/beta_we_want);
     ofstream f1out(string("Strfac_T_" +T_str+"_h_"+hmag_str + "_minusK_" + k_str + "_G_"
-                    +g_str+".dat").c_str(),ios_base::app); 
+                    +g_str+".dat").c_str()); 
 
   
     f1out << "qx\t qy \t Sq \t  Sq-squared "<<endl;
@@ -128,8 +128,8 @@ int main(int argc, char const * argv[])
             f1out.setf( ios_base::fixed, ios_base::floatfield );
             f1out.precision(7);f1out<< setw(12)<< qx
                           << setw(12)<< qy
-                          << setw(12)<<sqrt(sumreal*sumreal+sumimag*sumimag)
-            << setw(12)<< (sumreal*sumreal+sumimag*sumimag)/double( no_of_sites)
+            << setw(12)<<sqrt(sumreal*sumreal+sumimag*sumimag)/sqrt(no_of_sites)
+            << setw(12)<<(sumreal*sumreal+sumimag*sumimag)/double( no_of_sites)
             << endl;
             // printing to file
 
