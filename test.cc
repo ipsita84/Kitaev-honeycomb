@@ -129,8 +129,8 @@ int main(int argc, char const * argv[])
             f1out.precision(7);f1out<< setw(12)<< qx
                           << setw(12)<< qy
                           << setw(12)<<sqrt(sumreal*sumreal+sumimag*sumimag)
-                          << setw(12)<< sumreal*sumreal+sumimag*sumimag
-                          << endl;
+            << setw(12)<< (sumreal*sumreal+sumimag*sumimag)/double( no_of_sites)
+            << endl;
             // printing to file
 
         }
