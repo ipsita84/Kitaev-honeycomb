@@ -77,10 +77,9 @@ int main(int argc, char const * argv[])
     ifstream gin(string("Spins_T_" +T_str+"_h_"+hmag_str + "_minusK_" + k_str 
                  + "_G_"+g_str+"_theta_0.031415926535897934.dat").c_str(),ios_base::app); 
 
-   // string headers;
-  //  for(unsigned int i=1;i<=6; ++i)
-   // {gin>>headers; 
-    // printf ("%c",headers);}
+ 
+    string dummyLine;
+    getline(gin, dummyLine);//omit reading header line of data file
 
     for (unsigned int label=0; label< no_of_sites; ++label)
     {
