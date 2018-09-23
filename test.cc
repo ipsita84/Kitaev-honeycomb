@@ -24,18 +24,18 @@
 #include <math.h>
 #include <array>
 #include <algorithm>
+#include <complex>
 
 boost::random::mt19937 gen;
 using boost::lexical_cast;
 using namespace std;
 
 const double pi = acos(-1.0);
-const double beta_we_want =1;
 
 // Define lattice constants
 const int axis1 = 10, axis2 = axis1;
 const int no_of_sites = 2*axis1*axis2;
-
+const double beta_we_want=1;
 
 typedef boost::multi_array < double, 2 > array_2d_float;
 typedef boost::multi_array < int, 2 > array_2d_int;
@@ -54,7 +54,6 @@ const double hmag =50.0;
 int main(int argc, char const * argv[])
 {     	
 	
-
 
     array_2d_float sitepos(boost::extents[no_of_sites][2]);
     array_2d_float sitespin(boost::extents[no_of_sites][3]); 
@@ -97,37 +96,46 @@ int main(int argc, char const * argv[])
     }
 
 
-
+    
 /////////////////////////MAIN LOOP STARTS//////////////////////////////////////
-     for (unsigned int qxsteps=0; qxsteps<101; ++qxsteps)
+     for (unsigned int qxsteps=0; qxsteps<11; ++qxsteps)
     {
-        double qx = 0 + qxsteps*2*pi/100 ;
+        double qx = 0 + qxsteps*2*pi/10 ;
         
 
-        for (unsigned int qysteps=0; qysteps<101; ++qysteps)
+        for (unsigned int qysteps=0; qysteps<11; ++qysteps)
         {
-            
-           double qy = 0 + qysteps*2*pi/100 ;
-           for (unsigned int l = 0; l < no_of_sites; ++l)
-           {
-                    int count=1;
-           }
+           double sumreal=0, sumimag=0; 
+           double qy = 0 + qysteps*2*pi/10 ;
+           for (unsigned int i = 0; i < no_of_sites; ++i)
+           {      
+             sumreal=sumreal+sitespin[i][0]*cos(qx*sitepos[i][0]+qy*sitepos[i][1]);  
+
+             sumimag=sumimag+sitespin[i][0]*sin(qx*sitepos[i][0]+qy*sitepos[i][1]); 
+
+
+             sumreal=sumreal+sitespin[i][1]*cos(qx*sitepos[i][0]+qy*sitepos[i][1]);  
+
+             sumimag=sumimag+sitespin[i][1]*sin(qx*sitepos[i][0]+qy*sitepos[i][1]); 
+
+
+             sumreal=sumreal+sitespin[i][2]*cos(qx*sitepos[i][0]+qy*sitepos[i][1]);  
+
+             sumimag=sumimag+sitespin[i][2]*sin(qx*sitepos[i][0]+qy*sitepos[i][1]);                   
              
 
-       
-        f1out.setf( ios_base::fixed, ios_base::floatfield );
-        f1out.precision(7);f1out<< setw(12)<< qx
+            }
+            f1out.setf( ios_base::fixed, ios_base::floatfield );
+            f1out.precision(7);f1out<< setw(12)<< qx
                           << setw(12)<< qy
-                          << setw(12)<<0
-                          << setw(12)<< 0
+                          << setw(12)<<sqrt(sumreal*sumreal+sumimag*sumimag)
+                          << setw(12)<< sumreal*sumreal+sumimag*sumimag
                           << endl;
-        // printing to file
+            // printing to file
 
         }
-
-    }
  
-
+    }
  
 	f1out.close();
 
