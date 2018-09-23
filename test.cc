@@ -75,22 +75,23 @@ int main(int argc, char const * argv[])
 
 
     ifstream gin(string("Spins_T_" +T_str+"_h_"+hmag_str + "_minusK_" + k_str 
-                 + "_G_"+g_str+".dat").c_str(),ios_base::app); 
+                 + "_G_"+g_str+"_theta_0.031415926535897934.dat").c_str(),ios_base::app); 
 
-    string headers;
-    for(unsigned int i=1;i<=6; ++i)
-    {gin>>headers;}
+   // string headers;
+  //  for(unsigned int i=1;i<=6; ++i)
+   // {gin>>headers; 
+    // printf ("%c",headers);}
 
     for (unsigned int label=0; label< no_of_sites; ++label)
     {
             gin>>lab;
-            gin>>sitepos[lab][0];
-            gin>>sitepos[lab][1];
-            gin>>sitespin[lab][0];
-            gin>>sitespin[lab][1];
-            gin>>sitespin[lab][2];
-            printf ("%d % f %f %f %f %f\n",lab,sitepos[lab][0],sitepos[lab][1],
-                     sitespin[lab][0],sitespin[lab][1],sitespin[lab][2]);
+            gin>>sitepos[label][0];
+            gin>>sitepos[label][1];
+            gin>>sitespin[label][0];
+            gin>>sitespin[label][1];
+            gin>>sitespin[label][2];
+            printf ("%d % f %f %f %f %f\n",lab,sitepos[label][0],sitepos[label][1],
+                     sitespin[label][0],sitespin[label][1],sitespin[label][2]);
 
         
         printf (" \n");
