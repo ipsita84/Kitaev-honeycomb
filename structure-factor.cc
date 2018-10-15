@@ -99,15 +99,15 @@ ifstream gin("Spins_T_1_h_50_minusK_60_G_30_theta_3.1415926535897931.dat");
 
     
 /////////////////////////MAIN LOOP STARTS//////////////////////////////////////
-     for (unsigned int qxsteps=0; qxsteps<61; ++qxsteps)
+     for (unsigned int qxsteps=0; qxsteps<601; ++qxsteps)
     {
-        double qx = 0 + qxsteps*2*pi/(10) ;
+        double qx = 0 + qxsteps*2*pi/(100) ;
         
 
-        for (unsigned int qysteps=0; qysteps<61; ++qysteps)
+        for (unsigned int qysteps=0; qysteps<601; ++qysteps)
         {
            double sumreal=0, sumimag=0; 
-           double qy = 0 + qysteps*2*pi/10 ;
+           double qy = 0 + qysteps*2*pi/100 ;
            for (unsigned int i = 0; i < no_of_sites; ++i)
            {      
              sumreal=sumreal+sitespin[i][0]*cos(qx*sitepos[i][0]+qy*sitepos[i][1]);  
