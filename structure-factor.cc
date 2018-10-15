@@ -1,4 +1,4 @@
-//g++ -std=c++11 -Wall -O3 test.cc -o testo
+//g++ -std=c++11 -Wall -O3 structure-factor.cc -o testo
 // vim: set ai et cin ts=4 sw=4 tw=80:
 //drawing Kitaev honeycomb lattice & calculating energy + magnetization
 // in-plane vectors are r1=(0,1,-1), r2= =(-1,1,0), r3 =(0,1,-1) as they lie on 
@@ -99,12 +99,12 @@ ifstream gin("Spins_T_1_h_50_minusK_60_G_30_theta_3.1415926535897931.dat");
 
     
 /////////////////////////MAIN LOOP STARTS//////////////////////////////////////
-     for (unsigned int qxsteps=0; qxsteps<11; ++qxsteps)
+     for (unsigned int qxsteps=0; qxsteps<61; ++qxsteps)
     {
-        double qx = 0 + qxsteps*2*pi/10 ;
+        double qx = 0 + qxsteps*2*pi/(10) ;
         
 
-        for (unsigned int qysteps=0; qysteps<11; ++qysteps)
+        for (unsigned int qysteps=0; qysteps<61; ++qysteps)
         {
            double sumreal=0, sumimag=0; 
            double qy = 0 + qysteps*2*pi/10 ;
